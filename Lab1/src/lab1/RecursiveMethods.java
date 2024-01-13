@@ -342,7 +342,7 @@ public final class RecursiveMethods {
 	 *         @pre. {@code str } is not null String and {@code str } does not
 	 *         contain a digit in '0'.. '9'.
 	 */
-	public static String compressString(String str) {
+	public String compressString(String str) {
         if (str.isEmpty()) {
             return "";
         }
