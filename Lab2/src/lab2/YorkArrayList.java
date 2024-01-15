@@ -7,8 +7,8 @@ import java.lang.annotation.*;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
+//Full Name : Rayhaan Yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
 //Date :
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
