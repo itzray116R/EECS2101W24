@@ -52,31 +52,37 @@ public class YorkArrayList<E> implements List<E> {
 	 * No argument constructor
 	 */
 	public YorkArrayList() {
-		// TODO: Your implementation of this method starts here
+		//alredy implementated
 	}
 	
 	/**
-	 * Constructor takes array of elements and then add then to 
+	 * Constructor takes array of elements and then add them to 
 	 * the end of the Array list 
 	 * @param objects
 	 */
 	
 	public YorkArrayList(E[] objects) {
-		// TODO: Your implementation of this method starts here
-	  }
+		if (objects == null){
+			throw new NullPointerException("Array cannot be null");
+		}
+
+		YorkArrayList<E> arrLst = new YorkArrayList<>();
+		arrLst.size = objects.length;
+
+
+
+	}
 	
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		 return 0;
+		 return this.size;
 		
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		 return false;
+		return false;
 		
 	}
 
@@ -152,7 +158,7 @@ public class YorkArrayList<E> implements List<E> {
 	@Override
 	public boolean remove(E e) throws NullPointerException {
 		// TODO Your implementation of this method starts here
-		 return false;
+		 return false; 
 
 	}
 	

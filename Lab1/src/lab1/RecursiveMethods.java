@@ -7,7 +7,7 @@ import java.util.*;
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : Rayhaan Yaser Mohammed
 //Yorku Email : ray116@my.yorku.ca
-//Date : 14/01/2024
+//Date : 21/01/2024
 //Authenticity Declaration : 
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -179,42 +179,7 @@ public final class RecursiveMethods {
 	 * 
 	 * @pre. {@code n > 0 }
 	 */
-    
-
-
-	// public int[] IntegerToBinary(int n) {
-	// 	if (num == 0) {
-	// 		return new int[0]; // Base case: when num is 0, return an array containing only 0
-	// 	} else {
-	// 		int[] bp = IntegerToBinary(num / 2); // Recursive call for the quotient
-	// 		int remainder = num % 2;
 	
-	// 		// Concatenate the remainder with the binary prefix in reverse order
-	// 		int[] res = new int[bp.length + 1];
-	// 		System.arraycopy(bp,0,res,0,bp.length);
-	// 		res[bp.length] = remainder;
-	// 		Collections.reverse(Arrays.asList(res));
-	
-	// 		return res;
-	// 	}
-	// }
-	// public int[] IntegerToBinary(int n) {
-    //     if (n == 0) {
-    //         return new int[0];
-    //     }
-        
-    //     int[] binary = IntegerToBinary(n / 2);
-        
-    //     if (n % 2 == 0) {
-    //         binary = Arrays.copyOf(binary, binary.length + 1);
-    //         binary[binary.length - 1] = 0;
-    //     } else {
-    //         binary = Arrays.copyOf(binary, binary.length + 1);
-    //         binary[binary.length - 1] = 1;
-    //     }
-        
-    //     return binary;
-    // }
 	public int[] IntegerToBinary(int n){
 		String ex = "";
 		ex = sHelp(n,"");
