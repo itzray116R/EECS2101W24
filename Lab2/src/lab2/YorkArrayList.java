@@ -93,9 +93,10 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E get(int i) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		 return null;
-
+		if (i < 0 || i > this.size()){
+			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
+		}
+		 return this.data[i];
 	}
 
 	/*
