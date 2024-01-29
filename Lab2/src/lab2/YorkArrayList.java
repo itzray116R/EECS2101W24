@@ -123,14 +123,9 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		if (i < 0 || i > this.size()){
-			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
-		}
-		if(this.size == this.data.length ) {
-			E[] newArr = (E[]) new Object[arr.length * 2 + 1];
-            System.arraycopy(data, 0, newArr, 0, size);
-            data = newArr;
-		}
+		// Create a temporary array to hold data
+		
+
 	}
 
 	/*
@@ -140,9 +135,16 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E remove(int i) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		 return null;
-
+		if (i< 0 || i >= data.length){
+			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
+		}
+		E tmp = data[i];
+		for (int j=i ;j < size -1; j++) {
+			data[j]= data[j+1];
+		}
+		data[size-1] = null;
+		size--;
+		return tmp;
 	}
 
 
