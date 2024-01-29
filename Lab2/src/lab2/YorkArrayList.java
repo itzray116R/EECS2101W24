@@ -106,8 +106,12 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E set(int i, E e) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		 return null;
+		if (i < 0 || i > this.size()){
+			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
+		}
+		E tmp = this.data[i];
+		this.data[i] = e;
+		return tmp;
 
 
 	}
@@ -116,12 +120,17 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		// TODO: Your implementation of this method starts here
-
-
+		if (i < 0 || i > this.size()){
+			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
+		}
+		if(this.size == this.data.length ) {
+			E[] newArr = (E[]) new Object[arr.length * 2 + 1];
+            System.arraycopy(data, 0, newArr, 0, size);
+            data = newArr;
+		}
 	}
 
 	/*

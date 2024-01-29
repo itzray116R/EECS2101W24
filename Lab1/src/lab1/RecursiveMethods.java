@@ -476,34 +476,24 @@ public final class RecursiveMethods {
 	 *         each pair is a char and the second is a digit.
 	 */
 	public String expandCompressedString(String str) {
-
         if (str == null || str.length() <= 1) {
             return str;
         }
-
         return expandCompressedStringHelper(str, 0);
     }
-
     private String expandCompressedStringHelper(String str, int index) {
         if (index >= str.length()) {
             return "";
         }
-
         char currentChar = str.charAt(index);
-
         if (index + 1 < str.length() && Character.isDigit(str.charAt(index + 1))) {
             int count = Character.getNumericValue(str.charAt(index + 1));
-
             String expandedSubstring = expandCompressedStringHelper(str, index + 2);
-
-
             return repeatChar(currentChar, count) + expandedSubstring;
         } else {
-
             return currentChar + expandCompressedStringHelper(str, index + 1);
         }
     }
-
     private String repeatChar(char c, int count) {
         if (count <= 0) {
             return "";
