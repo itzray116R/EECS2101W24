@@ -62,27 +62,44 @@ public class YorkArrayList<E> implements List<E> {
 	 */
 	
 	public YorkArrayList(E[] objects) {
-		if (objects == null){
-			throw new NullPointerException("Array cannot be null");
+		if (objects == null) {
+			throw new IllegalArgumentException("Input array cannot be null");
 		}
-
-		YorkArrayList<E> arrLst = new YorkArrayList<>();
-		arrLst.size = objects.length;
-
-
-
+	
+		size = objects.length;
+		data = (E[]) new Object[size];
+	
+		// Print the contents of the objects array
+		System.out.print("Objects array: ");
+		for (E obj : objects) {
+			System.out.print(obj + " ");
+		}
+		System.out.println();
+	
+		// Copy elements from objects to data
+		for (int i = 0; i < size; i++) {
+			data[i] = objects[i];
+		}
+	
+		// Print the contents of the data array
+		System.out.print("Data array: ");
+		for (E item : data) {
+			System.out.print(item + " ");
+		}
+		System.out.println();
 	}
+	
 	
 
 	@Override
 	public int size() {
-		 return this.size;
+		return this.size;
 		
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return size == 0;
 		
 	}
 
@@ -96,7 +113,7 @@ public class YorkArrayList<E> implements List<E> {
 		if (i < 0 || i > this.size()){
 			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
 		}
-		 return this.data[i];
+		return this.data[i];
 	}
 
 	/*
@@ -109,11 +126,8 @@ public class YorkArrayList<E> implements List<E> {
 		if (i < 0 || i > this.size()){
 			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
 		}
-		E tmp = this.data[i];
 		this.data[i] = e;
-		return tmp;
-
-
+		return data[i];
 	}
 
 	/*
@@ -123,26 +137,43 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		// Create a temporary array to hold data
-		
-
+		if (size == data.length){
+			E[] tmp = (E[]) new Object[2*size];
+			for  (int j=0;j<size;j++) {
+				tmp[j] = data[j];
+			}
+			data = tmp;
+		}
+		if (i >= 0 && i <= size) {
+            for (int j = size; j > i; j--) {
+                data[j] = data[j - 1];
+            }
+            data[i] = e;
+            size++;
+        }
 	}
 
-	/*
+	/**
+	 * Method to remove an element from list at specific position
+	 * @param i - Position where we want to delete the element
+	 * @throws IndexOutOfBoundsException if provided index is less than zero or greater than the size of the ArrayList
+	 * @throws IndexOutOfBoundsException if provided index is less than zero or greater than the size of the list
+	 * @throws IndexOutOfBoundsException if the index is not valid for the current list
+	 * 
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)")
 	@Override
 	public E remove(int i) throws IndexOutOfBoundsException {
-		if (i< 0 || i >= data.length){
+		if (i< 0 || i >= size){
 			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
 		}
 		E tmp = data[i];
 		for (int j=i ;j < size -1; j++) {
 			data[j]= data[j+1];
 		}
-		data[size-1] = null;
+		//data[size-1] = null;
 		size--;
 		return tmp;
 	}
@@ -158,8 +189,14 @@ public class YorkArrayList<E> implements List<E> {
 	@Override
 	public boolean contains(E e) throws NullPointerException {
 		// TODO: Your implementation of this method starts here
-		 return false;
-
+		if (e == null){
+			throw new NullPointerException("Array cannot be null");
+		}
+		for (int i=0; i < size; i++){
+			if (data[i].equals(e))
+				return true;
+		}
+		return false;
 	}
 
 	/*
@@ -169,9 +206,20 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean remove(E e) throws NullPointerException {
-		// TODO Your implementation of this method starts here
-		 return false; 
-
+		if(e == null) throw new NullPointerException("e cannot be null" + e);
+		int i = -1;
+		for  (int j = 0; j < size; j ++ ) {
+			if (data[j].equals(e)){
+				i = j;
+			}
+		}
+		if(i == -1)
+			return false;
+		for  (int k = i ; k < size-1; k++ ){
+			data [k] = data [k+1];
+		}
+		size--;
+		return true;
 	}
 	
 	/*
