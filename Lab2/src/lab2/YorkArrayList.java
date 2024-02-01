@@ -69,27 +69,12 @@ public class YorkArrayList<E> implements List<E> {
 		size = objects.length;
 		data = (E[]) new Object[size];
 	
-		// Print the contents of the objects array
-		System.out.print("Objects array: ");
-		for (E obj : objects) {
-			System.out.print(obj + " ");
-		}
-		System.out.println();
-	
 		// Copy elements from objects to data
 		for (int i = 0; i < size; i++) {
 			data[i] = objects[i];
 		}
-	
-		// Print the contents of the data array
-		System.out.print("Data array: ");
-		for (E item : data) {
-			System.out.print(item + " ");
-		}
-		System.out.println();
 	}
-	
-	
+
 
 	@Override
 	public int size() {
@@ -123,11 +108,13 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E set(int i, E e) throws IndexOutOfBoundsException {
-		if (i < 0 || i > this.size()){
+		if (i >= 0 && i < size) {
+			E oldValue = data[i];
+			data[i] = e;
+			return oldValue;
+		} else {
 			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
 		}
-		this.data[i] = e;
-		return data[i];
 	}
 
 	/*
@@ -137,21 +124,26 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		if (size == data.length){
-			E[] tmp = (E[]) new Object[2*size];
-			for  (int j=0;j<size;j++) {
-				tmp[j] = data[j];
-			}
-			data = tmp;
-		}
-		if (i >= 0 && i <= size) {
+        if (size == data.length) {
+            E[] tmp = (E[]) new Object[2 * size];
+            for (int j = 0; j < size; j++) {
+                tmp[j] = data[j];
+            }
+            data = tmp;
+        }
+        if (i >= 0 && i <= size) {
             for (int j = size; j > i; j--) {
                 data[j] = data[j - 1];
             }
             data[i] = e;
             size++;
-        }
-	}
+        } else if (i == size) {
+			// If i equals size, it means appending to the end
+			data[size++] = e;
+		} else {
+			throw new IndexOutOfBoundsException("Index out of bounds: " + i);
+		}
+    }
 
 	/**
 	 * Method to remove an element from list at specific position
@@ -173,7 +165,6 @@ public class YorkArrayList<E> implements List<E> {
 		for (int j=i ;j < size -1; j++) {
 			data[j]= data[j+1];
 		}
-		//data[size-1] = null;
 		size--;
 		return tmp;
 	}
@@ -188,7 +179,6 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean contains(E e) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
 		if (e == null){
 			throw new NullPointerException("Array cannot be null");
 		}
@@ -229,8 +219,10 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean addAll(List<E> otherList) throws NullPointerException {
-		// TODO Your implementation of this method starts here
-		 return false;
+		for (E value : otherList){
+			add(size,value);
+		}
+		return true;
 
 	}
 
@@ -241,8 +233,10 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean removeAll(List<E> otherList) throws NullPointerException {
-		// TODO Your implementation of this method starts here
-		 return false;
+		for (E value : otherList){
+			remove(value);
+		}
+		return true;
 
 	}
 
@@ -253,9 +247,13 @@ public class YorkArrayList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean retainAll(List<E> otherList) throws NullPointerException {
-		// TODO Your implementation of this method starts here
-		 return false;
-
+		for (int i = 0; i < size; i++) {
+            if (!otherList.contains(get(i))) {
+                remove(i);
+                i--;
+            }
+        }
+        return true;
 	}
 	
 	/**
@@ -264,17 +262,31 @@ public class YorkArrayList<E> implements List<E> {
 	 */
 	@Override
 	public String toString() {
-		// TODO: Your implementation of this method starts here
-		 return new String(); 
-
+        String result = "[";
+        for (int i = 0; i < size; i++) {
+            result += data[i];
+            if (i < size - 1)
+                result += ", ";
+        }
+        result += "]";
+        return result;
 	}
 	
 	@Override
 	public Iterator<E> iterator() {
-		// TODO: Your implementation of this method starts here
-		 return null;
-
+		final int[] index = {0};
+		return  new Iterator<E>() {
+			@Override
+			public  boolean hasNext() {
+				return index[0] < size;
+			}
+			@Override
+			public E next() {
+				E value = data[index[0]];
+				index[0]++;
+				return value;
+			}
+		};
 	}
-
 	
 }
