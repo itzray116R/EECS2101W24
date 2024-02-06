@@ -6,9 +6,9 @@ import java.lang.annotation.*;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
-//Date :
+//Full Name :		Rayhaan Yaser Mohammed
+//Yorku Email :		ray116@my.yorku.ca
+//Date :			07/02/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -52,27 +52,33 @@ public class YorkLinkedList<E> implements List<E> {
 	/////////////////////////////////////////
 
 	public YorkLinkedList() {
-		// TODO: Your implementation of this method starts here
+		head = null;
+		tail = null;
 	}
 
 	public YorkLinkedList(E[] objects) {
-		// TODO: Your implementation of this method starts here
+		if(objects == null) {
+			throw new NullPointerException("Input array is Null");
+		}
 
+		head = null;
+		tail = null;
 
+		for (E obj : objects){
+			addLast(obj);
+		}
 	}
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		return -999;
+		return size;
 		
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		return false;
-		
+		//implementation
+		return size == 0;
 	}
 
 	/**
@@ -83,11 +89,19 @@ public class YorkLinkedList<E> implements List<E> {
 	 * 
 	 * @param e
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)") 
+	//justification = "Adding a new element at the head always takes constant time.")
 	public void addFirst(E e) {
-		// TODO: Your implementation of this method starts here
-		
+		Node<E>  tmp = new Node<>(e); //create a new node
 
+		if(isEmpty()){
+			head = tmp;
+			tail = tmp;
+		} else {
+			tmp.next = head;
+			head = tmp;
+		}
+		size++;
 	}
 
 	/**
@@ -97,9 +111,8 @@ public class YorkLinkedList<E> implements List<E> {
 	 * @return
 	 */
 	public E getFirst() {
-		// TODO: Your implementation of this method starts here
-		 return null;
-	
+		if(isEmpty()) return null; // if list empty return null
+		return head.element; // return head
 	}
 
 	/**
@@ -112,8 +125,16 @@ public class YorkLinkedList<E> implements List<E> {
 	 */
 	@TimeComplexity(value = "")
 	public void addLast(E e) {
-		// TODO: Your implementation of this method starts here
+		Node<E>  tmp = new Node<>(e); //create a new node
 
+		if(isEmpty()){
+			head = tmp;
+			tail = tmp;
+		} else {
+			tail.next = tmp;
+			tail= tmp;
+		}
+		size++;
 	}
 
 	/**
@@ -124,9 +145,8 @@ public class YorkLinkedList<E> implements List<E> {
 	 * @return
 	 */
 	public E getLast() {
-		// TODO: Your implementation of this method starts here
-		 return null;
-
+		if(isEmpty()) return null; // is list is empty return null
+		return tail.element; // return the tail
 	}
 
 	/*
@@ -136,21 +156,30 @@ public class YorkLinkedList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E get(int i) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		return null;
-	
+		if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
+
+		Node<E> curr = head;
+		for (int j = 0; j <= i; j++) {	//TCJ: here we iterate from 0 to i, so our loop will run i+1 times
+			curr = curr.next;
+		}
+		return curr.element;	
 	}
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public E set(int i, E e) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		
-		return null;
+		if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
+		Node<E> curr = head;
+		for (int j = 0; j < i; j++) {	//TCJ: we need to find the node at index i-1
+			curr = curr.next;
+		}
+		E res = curr.next.element;
+		curr.next.element = e;
+		return res;
 
 	}
 
@@ -158,11 +187,25 @@ public class YorkLinkedList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		// TODO: Your implementation of this method starts here
+		if (i < 0 || i > size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
 
+		Node<E> tmp = new Node<>(e);
+
+		if ( i == 0){
+			tmp.next = head;
+			head = tmp;
+		} else {
+			Node<E> curr = head;
+			for  (int j = 0; j < i - 1; j++){ //TCJ: We need to find the node at index i-1
+				curr = curr.next;
+			}
+			tmp.next = curr.next;
+			curr.next = tmp;
+		}
+		size++;
 	}
 
 	/**
