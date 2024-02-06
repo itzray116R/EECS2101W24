@@ -216,7 +216,8 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
+	// TCJ : N is the  number of elements in the array. If n is large, then it takes a long time to find an element in the array.
 	@Override
 	public boolean addAll(List<E> otherList) throws NullPointerException {
 		for (E value : otherList){
@@ -230,7 +231,10 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(m*n)")
+	/*	TCJ:
+	 *  The method iterated over the elements(n) in otherlist and then removes the occurences(m) of it from the ArrayList
+	 */
 	@Override
 	public boolean removeAll(List<E> otherList) throws NullPointerException {
 		for (E value : otherList){
@@ -244,7 +248,10 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(m*n)")
+	/* TCJ:
+	 * The method over element in ArrayLits ad then removes any element not present in the otherList
+	 */
 	@Override
 	public boolean retainAll(List<E> otherList) throws NullPointerException {
 		for (int i = 0; i < size; i++) {
