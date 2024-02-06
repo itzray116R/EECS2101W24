@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : Rayhaan Yaser Mohammed
 //Yorku Email : ray116@my.yorku.ca
-//Date :
+//Date : 04/02/2024 (dd/mm/yyyy)
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -92,7 +92,10 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)")
+	/*
+	 *  Justification: Accessing an element at a specific index in an array takes constant time.
+	 */
 	@Override
 	public E get(int i) throws IndexOutOfBoundsException {
 		if (i < 0 || i > this.size()){
@@ -105,7 +108,9 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)")
+	// Justification:  The set  method will always add an element at the end of the array, and since we are using an array 
+	// 				   The insertion at any position in an array can be done in constant
 	@Override
 	public E set(int i, E e) throws IndexOutOfBoundsException {
 		if (i >= 0 && i < size) {
@@ -122,6 +127,9 @@ public class YorkArrayList<E> implements List<E> {
 	 * Justify the time complexity inside the method body with TCJ
 	 */
 	@TimeComplexity(value = "O(n)")
+	// Justification: In the worst case, when the array needs to be resized, 
+	//				  elements may need to be shifted to accommodate the new element. 
+	//				  This operation takes linear time.
 	@Override
 	public void add(int i, E e) {
         if (size == data.length) {
@@ -156,6 +164,9 @@ public class YorkArrayList<E> implements List<E> {
 	 * Justify the time complexity inside the method body with TCJ
 	 */
 	@TimeComplexity(value = "O(1)")
+	// TCJ: The removal operation takes constant time O(1), because no matter what value 'i' has,
+	//       only one element will be removed and all other elements need to be shifted once. So, in worst case scenario, 
+	//       the number of elements that need to be shifted in order to fill the gap is always one.
 	@Override
 	public E remove(int i) throws IndexOutOfBoundsException {
 		if (i< 0 || i >= size){
@@ -176,7 +187,8 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
+	// TCJ : the method needs to iterate over the entire array to check for the specified element
 	@Override
 	public boolean contains(E e) throws NullPointerException {
 		if (e == null){
@@ -193,7 +205,8 @@ public class YorkArrayList<E> implements List<E> {
 	 * Add time complexity annotation taken by this method (@TimeComplexity). 
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
+	// TCJ : The method needs to iterate over the entire array to find and remove the specified element.
 	@Override
 	public boolean remove(E e) throws NullPointerException {
 		if(e == null) throw new NullPointerException("e cannot be null" + e);
