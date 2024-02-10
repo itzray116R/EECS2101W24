@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 ///////////////////////////////////////////////////////////////////////////
 //Full Name :		Rayhaan Yaser Mohammed
 //Yorku Email :		ray116@my.yorku.ca
-//Date :			07/02/2024
+//Date :			09/02/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -123,7 +123,7 @@ public class YorkLinkedList<E> implements List<E> {
 	 * 
 	 * @param e
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)")
 	public void addLast(E e) {
 		Node<E>  tmp = new Node<>(e); //create a new node
 
@@ -159,7 +159,7 @@ public class YorkLinkedList<E> implements List<E> {
 		if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
 
 		Node<E> curr = head;
-		for (int j = 0; j <= i; j++) {	//TCJ: here we iterate from 0 to i, so our loop will run i+1 times
+		for (int j = 0; j < i; j++) {	//TCJ: here we iterate from 0 to i, so our loop will run i+1 times
 			curr = curr.next;
 		}
 		return curr.element;	
@@ -172,16 +172,16 @@ public class YorkLinkedList<E> implements List<E> {
 	@TimeComplexity(value = "O(n)")
 	@Override
 	public E set(int i, E e) throws IndexOutOfBoundsException {
-		if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
+		if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index: " + i + " out of bounds");
 		Node<E> curr = head;
-		for (int j = 0; j < i; j++) {	//TCJ: we need to find the node at index i-1
+		for (int j = 0; j < i; j++) { //TCJ: we need to find the node at index i-1
 			curr = curr.next;
 		}
-		E res = curr.next.element;
-		curr.next.element = e;
+		E res = curr.element;
+		curr.element = e;
 		return res;
-
 	}
+	
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
@@ -190,16 +190,22 @@ public class YorkLinkedList<E> implements List<E> {
 	@TimeComplexity(value = "O(n)")
 	@Override
 	public void add(int i, E e) {
-		if (i < 0 || i > size) throw new IndexOutOfBoundsException("Index: "+ i + "out of bounds");
-
+	//	if (i < 0 || i > size) throw new IndexOutOfBoundsException("Index: " + i + " out of bounds"+size);
+	
 		Node<E> tmp = new Node<>(e);
-
-		if ( i == 0){
+	
+		if (i == 0) {
 			tmp.next = head;
 			head = tmp;
+			if (size == 0) {
+				tail = tmp;
+			}
+		} else if (i > size) {
+			tail.next = tmp;
+			tail = tmp;
 		} else {
 			Node<E> curr = head;
-			for  (int j = 0; j < i - 1; j++){ //TCJ: We need to find the node at index i-1
+			for (int j = 0; j < i - 1; j++) {
 				curr = curr.next;
 			}
 			tmp.next = curr.next;
@@ -207,6 +213,7 @@ public class YorkLinkedList<E> implements List<E> {
 		}
 		size++;
 	}
+	
 
 	/**
 	 * Remove the first node and then return the element stored inside this node the
@@ -217,10 +224,20 @@ public class YorkLinkedList<E> implements List<E> {
 	 * 
 	 * @return
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(1)")
+	/*
+	 * TCJ : 
+	 */
 	public E removeFirst() {
-		// TODO: Your implementation of this method starts here
-		return null;
+		if(isEmpty()) return null;
+
+		E rmdElement = head.element;
+		head = head.next;
+		size--;
+
+		if(isEmpty()) tail = null;
+
+		return rmdElement;
 
 	}
 
@@ -233,10 +250,29 @@ public class YorkLinkedList<E> implements List<E> {
 	 * 
 	 * @return
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	public E removeLast() {
-		// TODO: Your implementation of this method starts here
-		return null;
+		if(isEmpty()) return null;
+
+		if(size == 1) {
+			E rmdElement = head.element;
+			head = tail = null;
+			size = 0;
+			return rmdElement;
+		}
+		Node<E> curr = head;
+		Node<E> prev = null;
+
+		while ( curr.next != null) {
+			prev = curr;
+			curr =  curr.next;
+		}
+		E rmdElement = curr.element;
+		prev.next = null;
+		tail = prev;
+		size--;
+		
+		return rmdElement;
 		
 
 	}
@@ -248,9 +284,17 @@ public class YorkLinkedList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public E remove(int i) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		return null;
+		//TCJ: The time complexity of removing an element from a linked list is O(n), where n is the number of elements in the LinkedList. This is because we need to
+		//TCJ: The index of element to be removed is out of bounds, throw an exception
+		if(i < 0 || i >= size) throw new IndexOutOfBoundsException("index " + i + " is out of bound");
+		
+		Node<E> curr = head;
+		for (int j = 0; j < i; j++) curr = curr.next;
 
+		E rmdElement = curr.next.element;
+		curr.next = curr.next.next;
+		size--;
+		return rmdElement;
 	}
 
 	/**
@@ -265,9 +309,14 @@ public class YorkLinkedList<E> implements List<E> {
 	 * @return
 	 */
 	public int indexOf(E e) {
-		// TODO: Your implementation of this method starts here
-		return 99;
+		Node<E> curr = head;
+		for (int i = 0; i < size; i++) {
+			if (Objects.equals(e, curr.element)) return i;
+			curr = curr.next;
+		}
+		return -1;
 	}
+	
 
 	/**
 	 * Search this list and return the last match index. If this list does not
@@ -282,57 +331,95 @@ public class YorkLinkedList<E> implements List<E> {
 	 * @param e
 	 * @return
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
+	// TCJ: Taking Time Complexity of O(n) as we are iterating through
+	//	 all elements in the LinkedList to find the last occurrence of the given element.
 	public int lastIndexOf(E e) {
-		// TODO: Your implementation of this method starts here
-		
-		return -99;
+		int res = -1;
+		Node<E> curr = head;
+		for (int i = 0; i < size; i++) {
+			if (Objects.equals(e, curr.element)) res = i;
+			curr = curr.next;
+		}
+		return res;
 	}
+	
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public boolean contains(E e) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
+		if(e == null) throw new NullPointerException("The element is null");
+		if(isEmpty()) return false;
+		Node<E> curr = this.head;
+		while(curr != null){
+			if(e.equals(curr.element)) return true;
+			curr = curr.next;
+		}
 		return false;
-	
 	}
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public boolean remove(E e) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
-	
+		if (e == null)  throw new NullPointerException("The element is null.");
+		if(head == null) return false;
+		if(head.element.equals(e)){
+			head = head.next;
+			size--;
+			if(size == 0) tail = null; // if list becomes empty after removal of head node	
+			return true;
+		}
+		Node<E> curr = head;
+		while(curr.next != null & !curr.next.element.equals(e)){
+			curr = curr.next;
+		}
+		if(curr.next != null){
+			curr.next = curr.next.next;
+			size--;
+			if(curr.next == null) tail = curr; // if last remaining node in the list is removed, update the tail reference
+			return true;
+		}
+		return false;	
 	}
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public boolean addAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
+		if(otherList == null) throw new NullPointerException("Cannot add elements from a null list.");
+		boolean res = false;
+		for (E  element : otherList) { 
+			addLast(element);
+			res = true;
+		}
+		return res;
 	}
 
 	/*
 	 * Add time complexity annotation taken by this method (@TimeComplexity).
 	 * Justify the time complexity inside the method body with TCJ
 	 */
-	@TimeComplexity(value = "")
+	@TimeComplexity(value = "O(n)")
 	@Override
 	public boolean removeAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
+		if(otherList == null) throw new NullPointerException("Cannot add elements from a null list.");
+
+		boolean moded = false;
+		for (E element: otherList) {
+			moded |= remove(element);
+		}
+		return moded;
 	}
 
 	/*
@@ -342,8 +429,19 @@ public class YorkLinkedList<E> implements List<E> {
 	@TimeComplexity(value = "")
 	@Override
 	public boolean retainAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
+		if(otherList == null) throw new NullPointerException("Cannot add elements from a null list.");
+
+		boolean moded = false;
+
+		Iterator<E>  itr = iterator();
+		while(itr.hasNext()) {
+			E currElement = itr.next();
+			if (!otherList.contains(currElement)) {
+				itr.remove();
+				moded = true;
+			}
+		}
+		return moded;
 	}
 
 	
@@ -353,16 +451,47 @@ public class YorkLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public String toString() {
-		// TODO: Your implementation of this method starts here
-		 return new String();
-		
+		StringBuilder result = new StringBuilder("[");
+		Node<E> current = head;
+
+		while (current != null) {
+			result.append(current.element);
+			if (current.next != null) {
+				result.append(", ");
+			}
+			current = current.next;
+		}
+
+		result.append("]");
+		return result.toString();
 	}
 
 	@Override
 	public Iterator<E> iterator() {
-		// TODO: Your implementation of this method starts here
-		return null;
-		
+		return new Iterator<E>() {
+			private Node<E> current = head;
+
+			@Override
+			public boolean hasNext() {
+				return current != null;
+			}
+
+			@Override
+			public E next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
+
+				E element = current.element;
+				current = current.next;
+				return element;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 
 	
