@@ -5,9 +5,9 @@ import java.util.EmptyStackException;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
-//Date :
+//Full Name : Rayhaan Yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
+//Date : 15/02/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -43,23 +43,25 @@ public class YorkArrayStack<E> implements Stack<E> {
 	 * Add any other private data members or methods that are necessary 
 	 * to manage the YorkArrayStack stored
 	 */
-	
-	
-	
-	
-	
+	private E[] stack;
+	private int top;
+	private int capacity;	
 
 	/**
 	 * No argument constructor
 	 */
+	@SuppressWarnings("unchecked")
 	public YorkArrayStack() {
-		// TODO: Your implementation of this method starts here
-		
+		this.capacity = INITSIZE;
+		this.stack = (E[]) new Object[capacity];
+		this.top = -1;	
 	}
 
+	@SuppressWarnings("unchecked")
 	public YorkArrayStack(int capacity) {
-		// TODO: Your implementation of this method starts here
-		
+		this.capacity = capacity;
+		stack = (E[])new Object[capacity];
+		this.top = -1;
 	}
 
 	/**
@@ -68,59 +70,77 @@ public class YorkArrayStack<E> implements Stack<E> {
 	 * @param objects
 	 */
 	
+	@SuppressWarnings("unchecked")
 	public YorkArrayStack(E[] objects) {
-		// TODO: Your implementation of this method starts here
-	  }
+        this.capacity = objects.length;
+        this.stack = (E[]) new Object[this.capacity];
+        for (E obj : objects) {
+            push(obj);
+        }
+    }
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		return -999;
-		
+		return this.top +1;
 	}
 
 	@Override
 	public void clear() {
-		// TODO: Your implementation of this method starts here
-
+		for (int i=0;i<=top;i++) {
+			stack[i] = null;
+		}
+		top= -1;
 	}
 	
 	
 	
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		return false;
-
+		return top == -1;
 	}
 
-	
 	@Override
-	public E top() throws EmptyStackException {
-		//  TODO: Your implementation of this method starts here
-				return null;
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i <= top; i++) {
+            if (i != 0) {
+                sb.append(", ");
+            }
+            sb.append(stack[i]);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 
+    @Override
+    public E top() throws EmptyStackException {
+        if (isEmpty()) throw new EmptyStackException();
+        return stack[top];
+    }
 	
-	}
-	
-	
-	
+
 	@Override
 	public void push(E e) {
-		// TODO: Your implementation of this method starts here
-		
+    	if (top == capacity - 1) {
+    	    capacity *= 2;
+   	    	stack = java.util.Arrays.copyOf(stack, capacity);
+    	}
+    	top++;
+    	stack = java.util.Arrays.copyOf(stack, capacity); // deep copy
+    	stack[top] = e;
+	}	
+	
+	
 
-
-	}
 
 	@Override
 	public E pop() {
-		// TODO: Your implementation of this method starts here
-		return null;
+		if  (isEmpty()) throw new EmptyStackException();
+		E element = stack[top];
+		stack[top--] = null;
+		return element;
+		
 
 	}
-	
-
-
-
 }

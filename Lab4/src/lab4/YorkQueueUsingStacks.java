@@ -6,9 +6,9 @@ import java.util.*;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
-//Date :
+//Full Name : Rayhaan Yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
+//Date : February 13, 2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted

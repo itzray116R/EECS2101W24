@@ -5,9 +5,9 @@ import java.util.*;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
-//Date :
+//Full Name : Rayhaan yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
+//Date : 17/02/2024  
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -44,6 +44,12 @@ public class YorkArrayQueue<E> implements Queue<E> {
 	 * Add any other private data members or methods that are necessary 
 	 * to manage the YorkArrayStack stored
 	 */
+
+	private  E[] arr; /* The array used to store the elements in the stack */
+
+	private int front;
+	private int size;
+
 	
 	
 	
@@ -51,13 +57,14 @@ public class YorkArrayQueue<E> implements Queue<E> {
 	 * No argument constructor
 	 */
 	public YorkArrayQueue() {
-		// TODO: Your implementation of this method starts here
-		
+		this(INITSIZE); // call another constructor		
 	}
 
+	@SuppressWarnings("unchecked")
 	public YorkArrayQueue(int capacity) {
-		// TODO: Your implementation of this method starts here
-		
+		arr = (E[]) new Object[capacity];	
+		front = 0;
+		size = 0;	
 	}
 
 	/**
@@ -68,59 +75,67 @@ public class YorkArrayQueue<E> implements Queue<E> {
 	 */
 
 	public YorkArrayQueue(E[] objects) {
-		// TODO: Your implementation of this method starts here
+		this(objects.length);
+		for (E obj : objects) enqueue(obj);
 	}
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		return -999;
+		return size;
 
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		return false;
+		return size == 0;
 		
 	}
 
 	@Override
-	public void clear() {
-		// TODO: Your implementation of this method starts here
-		
-		
+	@SuppressWarnings("unchecked")
+	public void clear() {		
+		arr = (E[])new Object[arr.length];
+		front = 0;
+		size = 0;
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void enqueue(E e) {
-		// TODO: Your implementation of this method starts here
-
-
-
+		if (e == null)  throw new NullPointerException();
+		if(size == arr.length) {
+			E[] newArr = (E[]) (new Object[arr.length * 2]);
+        	for (int i = 0; i < size; i++) {
+            newArr[i] = arr[(front + i) % arr.length];
+        	}
+        arr = newArr;
+        front = 0;
+		}
+		arr[(front + size) % arr.length] = e;
+		size++;
 	}
 
 	@Override
 	public E first() throws NoSuchElementException {
-		// TODO: Your implementation of this method starts here
-		return null;
-			
+		if (isEmpty()) throw new NoSuchElementException();
+		return arr[front];
 	}
 
 	@Override
 	public E dequeue() throws NoSuchElementException {
-		// TODO: Your implementation of this method starts here
-		return null;
-
-
+		if (isEmpty()) throw new NoSuchElementException();
+		E tmp = arr[front];
+		arr[front] = null;
+		front = (front + 1) % arr.length;
+		size--;
+		return tmp;
 	}
 
 	@Override
 	public boolean contains(E e) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
-
-		
+		if (e  == null) throw new NullPointerException();
+		for (int i =0 ; i < size; i++) if (arr[(front+i)%arr.length].equals(e)) return true;
+		return false;	
 	}
 
 	
@@ -135,15 +150,14 @@ public class YorkArrayQueue<E> implements Queue<E> {
 	 */
 	@Override
 	public String toString() {
-		// TODO: Your implementation of this method starts here
-		return "";
+		StringBuilder str = new StringBuilder("[");
+		for  (int i=0; i<size; i++){
+			str.append(arr[(front+i)%arr.length]);
+			if (i != size-1){
+				str.append(", ");
+			}
+		}
+		str.append("]");
+		return str.toString();
 	}
-	
-	
-
-
-
-	
-	
-
 }
