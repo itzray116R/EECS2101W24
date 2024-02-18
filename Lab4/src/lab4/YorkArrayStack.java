@@ -35,10 +35,8 @@ public class YorkArrayStack<E> implements Stack<E> {
 	 * Initial size, default size, for the Array of stack 
 	 * remember that an empty stack has zero elements
 	 */
-	// ALREADY IMPLEMENTED; DO NOT MODIFY
 	public static final int INITSIZE = 16;
 
-	
 	/**
 	 * Add any other private data members or methods that are necessary 
 	 * to manage the YorkArrayStack stored
@@ -69,15 +67,13 @@ public class YorkArrayStack<E> implements Stack<E> {
 	 * the end of the Array list 
 	 * @param objects
 	 */
-	
 	@SuppressWarnings("unchecked")
 	public YorkArrayStack(E[] objects) {
-        this.capacity = objects.length;
-        this.stack = (E[]) new Object[this.capacity];
-        for (E obj : objects) {
-            push(obj);
-        }
-    }
+		this.capacity = objects.length;
+		this.stack = (E[]) new Object[this.capacity];
+		System.arraycopy(objects, 0, stack, 0, objects.length);
+		this.top = objects.length-1;
+	}
 
 	@Override
 	public int size() {
@@ -92,55 +88,48 @@ public class YorkArrayStack<E> implements Stack<E> {
 		top= -1;
 	}
 	
-	
-	
 	@Override
 	public boolean isEmpty() {
 		return top == -1;
 	}
 
 	@Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i <= top; i++) {
-            if (i != 0) {
-                sb.append(", ");
-            }
-            sb.append(stack[i]);
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
-    @Override
-    public E top() throws EmptyStackException {
-        if (isEmpty()) throw new EmptyStackException();
-        return stack[top];
-    }
-	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for (int i = 0; i <= top; i++) {
+			if (i != 0) {
+				sb.append(", ");
+			}
+			sb.append(stack[i]);
+		}
+		sb.append("]");
+		return sb.toString();
+	}
 
 	@Override
+	public E top() throws EmptyStackException {
+		if (isEmpty()) throw new EmptyStackException();
+		return stack[top];
+	}
+	
+	@Override
 	public void push(E e) {
-    	if (top == capacity - 1) {
-    	    capacity *= 2;
-   	    	stack = java.util.Arrays.copyOf(stack, capacity);
-    	}
-    	top++;
-    	stack = java.util.Arrays.copyOf(stack, capacity); // deep copy
-    	stack[top] = e;
+		if (top == capacity - 1) {
+			capacity *= 2;
+			stack = java.util.Arrays.copyOf(stack, capacity);
+		}
+		top++;
+		stack[top] = e;
 	}	
-	
-	
-
 
 	@Override
 	public E pop() {
-		if  (isEmpty()) throw new EmptyStackException();
+		if (isEmpty()) throw new EmptyStackException();
 		E element = stack[top];
-		stack[top--] = null;
+		stack[top] = null;
+		top--;
 		return element;
-		
 
 	}
 }
