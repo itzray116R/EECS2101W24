@@ -378,15 +378,21 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 */
 
 	public void removeBetween(int lowerindex, int upperindex) {
-		if (lowerindex < 0 || lowerindex >= size || upperindex < 0 || upperindex >= size || lowerindex > upperindex) {
+		if (lowerindex < 0 || upperindex < 0 || lowerindex > upperindex) {
 			throw new IndexOutOfBoundsException("Invalid indices");
 		}
 	
+		// Adjust indices if they are greater than the size of the list
+		lowerindex = Math.min(lowerindex, size - 1);
+		upperindex = Math.min(upperindex, size - 1);
+	
 		Node<E> lowerNode = header.next;
 		Node<E> upperNode = header.next;
+	
 		for (int index = 0; index < lowerindex; index++) {
 			lowerNode = lowerNode.next;
 		}
+	
 		for (int index = 0; index <= upperindex; index++) {
 			upperNode = upperNode.next;
 		}
@@ -487,6 +493,7 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public String toString() {
+		if(isEmpty()) return "";
 		StringBuilder result = new StringBuilder("[");
 		Node<E> current = header.next;
 		while (current != trailer) {
