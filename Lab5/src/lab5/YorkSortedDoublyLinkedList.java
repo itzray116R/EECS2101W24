@@ -280,9 +280,6 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
         }
     }
 
-	
-
-
 	public void clear() {
 		// Reset header and trailer to create an empty list
 		header.next = trailer;
@@ -465,6 +462,7 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	@Override
 	public boolean retainAll(List<E> otherList) throws NullPointerException {
 		if (otherList==null) throw new NullPointerException();
+		if (otherList.isEmpty()) return false;
 		boolean mod = false;
 		Node<E> curr = header.next;
 		while (curr != trailer) {
