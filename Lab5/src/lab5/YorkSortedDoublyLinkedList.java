@@ -64,7 +64,7 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 		trailer = new Node<>(null);
 		header.next = trailer;
 		trailer.prev = header;
-		size =0;
+		//size =0;
 	}
 
 	/**
@@ -204,10 +204,7 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 * @param comparator
 	 */
 	public void sortAscending(Comparator<E> comparator) {
-
-		// TODO: Your implementation of this method starts here
-
-
+		mergeSort(comparator, true);
 	}
 
 	/**
@@ -218,11 +215,80 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 * @param comparator
 	 */
 	public void sortDescending(Comparator<E> comparator) {
-
-		// TODO: Your implementation of this method starts here
-					
+		mergeSort(comparator, false);				
 	}
 
+	private void mergeSort(Comparator<E> comparator, boolean ascending) {
+        if (size > 1) {
+            int middle = size / 2;
+
+            YorkSortedDoublyLinkedList<E> leftHalf = new YorkSortedDoublyLinkedList<>();
+            YorkSortedDoublyLinkedList<E> rightHalf = new YorkSortedDoublyLinkedList<>();
+
+            // Split the list into two halves
+            Node<E> current = header.next;
+            for (int i = 0; i < middle; i++) {
+                leftHalf.addLast(current.element);
+                current = current.next;
+            }
+
+            while (current != trailer) {
+                rightHalf.addLast(current.element);
+                current = current.next;
+            }
+
+            // Recursively sort the two halves
+            leftHalf.mergeSort(comparator, ascending);
+            rightHalf.mergeSort(comparator, ascending);
+
+            // Merge the sorted halves
+            merge(leftHalf, rightHalf, comparator, ascending);
+        }
+    }
+
+    private void merge(YorkSortedDoublyLinkedList<E> left, YorkSortedDoublyLinkedList<E> right, 
+	Comparator<E> comparator, boolean ascending) {
+        clear(); // Clear the current list
+
+        Node<E> leftNode = left.header.next;
+        Node<E> rightNode = right.header.next;
+
+        // Merge the two sorted lists
+        while (leftNode != left.trailer && rightNode != right.trailer) {
+            boolean shouldAddLeft = (comparator.compare(leftNode.element, rightNode.element) <= 0 && ascending)
+                    || (comparator.compare(leftNode.element, rightNode.element) >= 0 && !ascending);
+
+            if (shouldAddLeft) {
+                addLast(leftNode.element);
+                leftNode = leftNode.next;
+            } else {
+                addLast(rightNode.element);
+                rightNode = rightNode.next;
+            }
+        }
+
+        // Add remaining elements from left list
+        while (leftNode != left.trailer) {
+            addLast(leftNode.element);
+            leftNode = leftNode.next;
+        }
+
+        // Add remaining elements from right list
+        while (rightNode != right.trailer) {
+            addLast(rightNode.element);
+            rightNode = rightNode.next;
+        }
+    }
+
+	
+
+
+	public void clear() {
+		// Reset header and trailer to create an empty list
+		header.next = trailer;
+		trailer.prev = header;
+		size = 0;
+	}
 
 	@Override
 	public int size() {
@@ -258,16 +324,24 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int i, E e) {
-		if (i < 0 || i > size) throw new IndexOutOfBoundsException("Index out of Bounds: "  + i);
+		if (i < 0) {
+			throw new IndexOutOfBoundsException("Index out of Bounds: " + i);
+		}
+	
 		Node<E> newNode = new Node<>(e);
 		Node<E> curr = header;
-		for (int j =0 ; j <i; j++) curr = curr.next;
+	
+		for (int j = 0; j < i && curr.next != trailer; j++) {
+			curr = curr.next;
+		}
+	
 		newNode.next = curr.next;
-		newNode.prev  = curr;
+		newNode.prev = curr;
 		curr.next.prev = newNode;
 		curr.next = newNode;
 		size++;
 	}
+
 
 	/**
 	 * 
@@ -282,7 +356,8 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 */
 
 	public void addAfter(int i, E e) {
-		
+		if  (i < 0 ) throw new IndexOutOfBoundsException(); //If negative or larger than the number of elements it is taken as a value equal to the number
+		add(i+1,e);
 	}
 
 	/**
@@ -306,56 +381,106 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 */
 
 	public void removeBetween(int lowerindex, int upperindex) {
-		// TODO: Your implementation of this method starts here
-					
-
-
+		if (lowerindex < 0 || lowerindex >= size || upperindex < 0 || upperindex >= size || lowerindex > upperindex) {
+			throw new IndexOutOfBoundsException("Invalid indices");
+		}
+	
+		Node<E> lowerNode = header.next;
+		Node<E> upperNode = header.next;
+		for (int index = 0; index < lowerindex; index++) {
+			lowerNode = lowerNode.next;
+		}
+		for (int index = 0; index <= upperindex; index++) {
+			upperNode = upperNode.next;
+		}
+	
+		lowerNode.next = upperNode;
+		upperNode.prev = lowerNode;
+		size -= (upperindex - lowerindex + 1);
 	}
 
 	@Override
 	public E remove(int i) throws IndexOutOfBoundsException {
-		// TODO: Your implementation of this method starts here
-		return null;
-
-
-
+		if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
+		Node<E> curr = header.next;
+		for (int j =0; j < i; j++)  curr=curr.next;
+		E removedElement = curr.element;
+		curr.prev.next = curr.next;
+		curr.next.prev = curr.prev;
+		--size;
+		return removedElement;
 	}
 
 	@Override
 	public boolean contains(E e) throws NullPointerException {
-		// TODO Auto-generated method stub
+		if (e == null)  throw new NullPointerException("element is Null");
+		Node<E> curr = header.next;
+		while (curr != trailer) {
+			if (curr.element.equals(e)) return true;
+			curr = curr.next;
+		}
 		return false;
-
 	}
 
 	@Override
 	public boolean remove(E e) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
+		if (e == null) throw new NullPointerException("Element is null");
+		Node<E> curr = header.next;
+		while(curr != trailer) {
+			if (curr.element.equals(e)){
+				curr.prev.next = curr.next;
+            curr.next.prev = curr.prev;
+            size--;
+            return true;
+			}
+			curr = curr.next;
+		}
 		return false;
-
-
 	}
 
 	@Override
 	public boolean addAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
-
-
+		if (otherList == null) throw new NullPointerException();
+		Iterator<E> iter = otherList.iterator();
+		boolean mod = false;
+		while (iter.hasNext()) {
+			addLast(iter.next());
+			mod = true;		
+		}
+		return mod;
 	}
 
 	@Override
 	public boolean removeAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
+		if (otherList == null) throw new NullPointerException();
 
-
+		Iterator <E> iter = otherList.iterator();
+		boolean mod = false;
+		while (iter.hasNext()) {
+			mod |= remove(iter.next());
+		}
+		return mod;
 	}
 
 	@Override
 	public boolean retainAll(List<E> otherList) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return false;
+		if (otherList==null) throw new NullPointerException();
+		boolean mod = false;
+		Node<E> curr = header.next;
+		while (curr != trailer) {
+			if (!otherList.contains(curr.element)) {
+				Node<E> nextNode = curr.next;
+				curr.prev.next = curr.next;
+				curr.next.prev = curr.prev;
+				curr = nextNode;
+				size--;
+				mod = true;
+			} else {
+				curr = curr.next;
+			}
+		}
+	
+		return mod;
 	}
 
 	/**
@@ -364,17 +489,51 @@ public class YorkSortedDoublyLinkedList<E> implements List<E> {
 	 */
 	@Override
 	public String toString() {
-		// TODO: Your implementation of this method starts here
-		 return new String();
-
-		
+		StringBuilder result = new StringBuilder("[");
+		Node<E> current = header.next;
+		while (current != trailer) {
+			result.append(current.element);
+			if (current.next != trailer) {
+				result.append(", ");
+			}
+			current = current.next;
+		}
+		result.append("]");
+		return result.toString();
 	}
 
 	@Override
 	public Iterator<E> iterator() {
-		// TODO: Your implementation of this method starts here
-		return null;
-		
+		return new Iterator<E>() {
+			private Node<E> current = header.next;
+			private Node<E> lastReturned = null;
+	
+			@Override
+			public boolean hasNext() {
+				return current != trailer;
+			}
+	
+			@Override
+			public E next() {
+				if (!hasNext()) {
+					throw new java.util.NoSuchElementException();
+				}
+				E element = current.element;
+				lastReturned = current;
+				current = current.next;
+				return element;
+			}
+	
+			@Override
+			public void remove() {
+				if (lastReturned == null) {
+					throw new IllegalStateException("remove() can only be called after next()");
+				}
+				lastReturned.prev.next = lastReturned.next;
+				lastReturned.next.prev = lastReturned.prev;
+				size--;
+				lastReturned = null;
+			}
+		};
 	}
-
 }
