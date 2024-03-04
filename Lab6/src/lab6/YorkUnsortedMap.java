@@ -9,9 +9,9 @@ import java.util.List;
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
-//Date :
+//Full Name : 	Rayhaan Yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
+//Date : 03/03/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -49,15 +49,13 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 
 		@Override
 		public K getKey() {
-			// TODO: Your implementation of this method starts here
-			return null;
+			return key;
 			
 		}
 
 		@Override
 		public V getValue() {
-			// TODO: Your implementation of this method starts here
-			return null;
+			return value;
 			
 		}
 
@@ -68,8 +66,9 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 		 * @return old value of this entry
 		 */
 		public V setValue(V newValue) {
-			// TODO: Your implementation of this method starts here
-			return null;
+			V v = this.value;
+			this.value = newValue;
+			return v;
 		}
 
 		/**
@@ -115,8 +114,9 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 	 * factor
 	 */
 	public YorkUnsortedMap() {
-		// TODO: Your implementation of this method starts here
-		
+		entries = new ArrayList<>() ;
+		this.loadFactor = LOADFACTOR;
+		this.capacity = INITCAPACITY;
 	}
 
 	/**
@@ -124,7 +124,9 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 	 * and default load factor
 	 */
 	public YorkUnsortedMap(int capacity) {
-		// TODO: Your implementation of this method starts here
+		entries = new ArrayList<>(capacity) ;
+		this.loadFactor = LOADFACTOR;
+		this.capacity = INITCAPACITY;
 	}
 
 	/**
@@ -139,80 +141,130 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 	 * @param loadFactor map loading factor
 	 */
 	public YorkUnsortedMap(int capacity, double loadFactor) {
-		// TODO: Your implementation of this method starts here
+		entries = new ArrayList<>(capacity) ;
+		this.loadFactor = loadFactor;
+		this.capacity = capacity;
 	}
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		return -999;
+		return size;
 		
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		return false;
-		
+		return size == 0;
 	}
 
 	@Override
 	public V get(K key) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
+		if (key == null) throw new NullPointerException();
+		for (MapEntry<K,V> e : entries) {
+			if (e.getKey().equals(key)) return e.getValue();
+		}
 		return null;
 	}
 
 	@Override
 	public void clear() {
-		// TODO: Your implementation of this method starts here
-
+		entries.clear();
 	}
 
 	@Override
 	public V put(K key, V value) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
-		return null;
+		if  (key == null || value == null) throw  new NullPointerException();
+		
+		if (size >= capacity * loadFactor) extendSize();
 
+		for (MapEntry<K,V> entry: entries) {
+			if (entry.getKey().equals(key)) {
+				V oldValue = entry.getValue();
+				entry.setValue(value);
+				return oldValue;
+			}
+		}
+		
+		entries.add(new MapEntry<>(key, value));
+		size++;
+		return null;
+	}
+
+	private void extendSize() {
+		List<MapEntry<K,V>> list = new ArrayList<>(2*capacity);
+		for  (MapEntry<K,V> entry: entries) {
+			list.add(entry);	
+		}
+		entries = list;
 	}
 
 	@Override
 	public V remove(K key) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
+		if  (key == null) throw new NullPointerException();
+		for (MapEntry<K,V> entry : entries) {	
+			if  (entry.getKey().equals(key)) {
+				V v = entry.getValue();
+				entries.remove(entry);
+				size--;
+				return v;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public boolean containsKey(K key) throws NullPointerException {
-		// TODO: Your implementation of this method starts here
+		if  (key == null) throw new NullPointerException();
+		for (MapEntry<K,V> e : entries) {
+			if (e.getKey().equals(key)) return true;
+		}
 		return false;
-
-
 	}
 
 	@Override
 	public boolean containsValue(V value) {
-		// TODO: Your implementation of this method starts here
+		for  (MapEntry<K,V> e : entries) {
+			if (value.equals(e.getValue())) return true;
+		}
 		return false;
 	}
 
 	@Override
 	public Iterable<K> keySet() {
-		// TODO: Your implementation of this method starts here
-		return null;
-
+		List<K> lizt = new ArrayList<>();
+		for  (MapEntry<K,V> e: entries) lizt.add(e.getKey());
+		return lizt;
 	}
 
 	@Override
 	public Iterable<V> values() {
-		// TODO: Your implementation of this method starts here
-		return null;
+		List<V> lizt = new ArrayList<>();
+		for  (MapEntry<K,V> e: entries) lizt.add(e.getValue());
+		return lizt;
 	}
 
 	@Override
-	public Iterable<Entry<K, V>> entrySet() {
-		// TODO: Your implementation of this method starts here
-		return null;
-	}
+public Iterable<Entry<K, V>> entrySet() {
+    return new Iterable<Entry<K, V>>() {
+        @Override
+        public Iterator<Entry<K, V>> iterator() {
+            return new Iterator<Entry<K, V>>() {
+                private Iterator<MapEntry<K, V>> mapEntryIterator = entries.iterator();
+
+                @Override
+                public boolean hasNext() {
+                    return mapEntryIterator.hasNext();
+                }
+
+                @Override
+                public Entry<K, V> next() {
+                    return mapEntryIterator.next();
+                }
+            };
+        }
+    };
+}
+
 
 	/**
 	 * Return String value represent the content of map 
@@ -223,10 +275,21 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 	 */
 	@Override
 	public String toString() {
+		if (entries.isEmpty()) {
+			return "[]";
+		}
 
-		// TODO: Your implementation of this method starts here
-		 return new String();
-
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Iterator<MapEntry<K, V>> it = entries.iterator();
+		while (it.hasNext()) {
+			MapEntry<K, V> entry = it.next();
+			sb.append(entry.toString());
+			if (it.hasNext()) {
+				sb.append(", ");
+			}
+		}
+		sb.append(']');
+		return sb.toString();
 	}
-
 }
