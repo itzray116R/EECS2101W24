@@ -11,7 +11,7 @@ import java.util.List;
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : 	Rayhaan Yaser Mohammed
 //Yorku Email : ray116@my.yorku.ca
-//Date : 03/03/2024
+//Date : 08/03/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -250,12 +250,10 @@ public Iterable<Entry<K, V>> entrySet() {
         public Iterator<Entry<K, V>> iterator() {
             return new Iterator<Entry<K, V>>() {
                 private Iterator<MapEntry<K, V>> mapEntryIterator = entries.iterator();
-
                 @Override
                 public boolean hasNext() {
                     return mapEntryIterator.hasNext();
                 }
-
                 @Override
                 public Entry<K, V> next() {
                     return mapEntryIterator.next();
