@@ -172,23 +172,26 @@ public class YorkUnsortedMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public V put(K key, V value) throws NullPointerException {
-		if  (key == null || value == null) throw  new NullPointerException();
-		
-		if (size >= capacity * loadFactor) extendSize();
+    public V put(K key, V value) throws NullPointerException {
+        if (key == null || value == null)
+            throw new NullPointerException();
 
-		for (MapEntry<K,V> entry: entries) {
-			if (entry.getKey().equals(key)) {
-				V oldValue = entry.getValue();
-				entry.setValue(value);
-				return oldValue;
-			}
-		}
-		
-		entries.add(new MapEntry<>(key, value));
-		size++;
-		return null;
-	}
+        if (size >= capacity * loadFactor)
+            extendSize();
+
+        for (MapEntry<K, V> entry : entries) {
+            if (entry.getKey().equals(key)) {
+                V oldValue = entry.getValue();
+                remove(key);
+                entries.add(new MapEntry<>(key, value));
+                return oldValue;
+            }
+        }
+
+        entries.add(new MapEntry<>(key, value));
+        size++;
+        return null;
+    }
 
 	private void extendSize() {
 		List<MapEntry<K,V>> list = new ArrayList<>(2*capacity);
