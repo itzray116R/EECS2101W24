@@ -1,14 +1,17 @@
 package lab7;
 
 import java.util.List;
+
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 //You are NOT allowed to add any "import" statement other than 
 //the ones already in the starter files. 
 
 ///////////////////////////////////////////////////////////////////////////
-//Full Name :
-//Yorku Email :
+//Full Name : Rayhaan Yaser Mohammed
+//Yorku Email : ray116@my.yorku.ca
 //Date :
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
@@ -55,51 +58,44 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 		 * Constructs a node with the given element and neighbors. 
 		 * */
 		public Node(E e, Node<E> above, Node<E> leftChild, Node<E> rightChild) {
-			// TODO: Your implementation of this method starts here
-
+			element = e;
+			parent = above;
+			left = leftChild;
+			right = rightChild;
 		}
 	
 
 		public Node<E> getParent() {
-			// TODO: Your implementation of this method starts here
-			return null;
+			return parent;
 		}
 
 		public Node<E> getLeft() {
-			// TODO: Your implementation of this method starts here
-			return null;
+			return left;
 		}
 
 		public Node<E> getRight() {
-			// TODO: Your implementation of this method starts here
-			return null;
+			return right;
 		} 
 
 		public void setElement(E e) {
-			// TODO: Your implementation of this method starts here
-			
+			element = e;
 		}
 
 		public void setParent(Node<E> parentNode) {
-			// TODO: Your implementation of this method starts here
-			
+			parent = parentNode;
 		}
 
 		public void setLeft(Node<E> leftChild) {
-			// TODO: Your implementation of this method starts here
-			
+			left = leftChild;
 		}
 
 		public void setRight(Node<E> rightChild) {
-			// TODO: Your implementation of this method starts here
-			
+			right = rightChild;
 		}
 
 		@Override
 		public E getElement() throws IllegalStateException {
-			// TODO: Your implementation of this method starts here
-			return null;			
-			
+			return element;
 		}
 
 	}
@@ -121,69 +117,74 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * Constructs an empty tree
 	 */
 	public YorkLinkedBinaryTree() {
-		// TODO: Your implementation of this method starts here
-
+		root = null;
+		size = 0;
 	}
 
 	@Override
 	public Position<E> root() {
-		// TODO: Your implementation of this method starts here
-		return null;
-		
+		return root;
 	}
 
 	@Override
 	public Position<E> parent(Position<E> p) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-		
+		Node<E> node = (Node<E>) p;
+		return node.getParent();
 	}
 
 	@Override
 	public Iterable<Position<E>> children(Position<E> p) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		Node<E> node = (Node<E>) p;
+		List<Position<E>> children = new ArrayList<>(); //initialize the list as a arraylist
+		if (node.getLeft() != null) {
+			children.add(node.getLeft());
+		}
+		if (node.getRight() != null) {
+			children.add(node.getRight());
+		}
+		return children;
 	}
 
 	@Override
 	public int numChildren(Position<E> p) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return 0;
-
-
+		Node<E> node = (Node<E>) p;
+		int count = 0;
+		if (node.getLeft() != null) {
+			count++;
+		}
+		if (node.getRight() != null) {
+			count++;
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isInternal(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
-		return false;
-
+		Node<E> node = (Node<E>) p;
+		return node.getLeft() != null || node.getRight() != null;
 	}
 
 	@Override
 	public boolean isExternal(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
-		return false;
-
+		Node<E> node = (Node<E>) p;
+		return node.getLeft() == null && node.getRight() == null;
 	}
 
 	@Override
 	public boolean isRoot(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
-		return false;
-
+		Node<E> node = (Node<E>) p;
+		return node == root;
 	}
 
 	@Override
 	public int size() {
-		// TODO: Your implementation of this method starts here
-		return 0;
+		return size;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO: Your implementation of this method starts here
-		return false;
+		
+		return size == 0;
 		
 	}
 	
@@ -196,9 +197,13 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 */
 	
 	public Position<E> addRoot(E e) throws IllegalStateException {
-		// TODO: Your implementation of this method starts here
-		 return null;
-
+		if (!isEmpty()) {
+			throw new IllegalStateException("Tree is not empty");
+		} else {
+			root = new Node<>(e, null, null, null);
+			size++;
+			return root;
+		}
 	}
 	
 	/**
@@ -210,9 +215,13 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException if p is not a valid Position for this tree
 	 */
 	public int depth(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
-		 return -1;
-
+		Node<E> node = (Node<E>) p;
+		int depth = 0;
+		while (node != root) {
+			node = node.getParent();
+			depth++;
+		}
+		return depth;
 	}
 
 	/**
@@ -222,7 +231,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException
 	 */
 	public int height(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		 return -1;
 
 
@@ -234,7 +243,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @return the height of this binary tree
 	 */
 	public int height() {
-		// TODO: Your implementation of this method starts here
+		
 		return -1;
 		
 
@@ -242,21 +251,21 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 
 	@Override
 	public Position<E> left(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
 
 	@Override
 	public Position<E> right(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
 
 	@Override
 	public Position<E> sibling(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
@@ -274,7 +283,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * 									the given position has already a left child 
 	 */
 	public Position<E> insertLeft(Position<E> p, E e) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
@@ -291,7 +300,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 *                                  child
 	 */
 	public Position<E> insertRight(Position<E> p, E e) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 	}
 
@@ -306,7 +315,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException if p is not a valid Position for this tree.
 	 */
 	public E set(Position<E> p, E e) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
@@ -320,7 +329,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * 										p has two children
 	 */
 	public Position<E> remove(Position<E> p) throws IllegalArgumentException {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
@@ -343,7 +352,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	public void attach(Position<E> p, YorkLinkedBinaryTree<E> t1, YorkLinkedBinaryTree<E> t2)
 			throws IllegalArgumentException {
 
-		// TODO: Your implementation of this method starts here
+		
 	}
 	
 	/**
@@ -352,7 +361,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 */
 	@Override
 	public Iterator<E> iterator() {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 
 	}
@@ -364,7 +373,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	
 	@Override
 	public Iterable<Position<E>> positions() {
-		// TODO: Your implementation of this method starts here
+		
 		return null;
 		
 	}

@@ -19,14 +19,14 @@ import java.util.Queue;
 /*
 * <p>
 * Your implementation of this class or methods should not contains:
-* 1. No System.out.println statements should appear here. Instead, you need to
+* 1. No System.out.println statements should appear here. Instead, you need to`
 * return the result. 2. No Scanner operations should appear here (e.g.,
 * input.nextInt()). Instead, refer to the input parameters of this method.
 * </p>
 */
 
 /**
- * The YorkBinarySearchTree tree is an binary search tree 
+ * The YorkBinarySearchTree tree is an binary search tree
  * 
  * 
  * In a YorkBinarySearchTree tree extends YorkLinkedBinaryTree 
@@ -60,7 +60,7 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 *  Constructs a binary search tree with given element at root 
 	 */
 	public YorkBinarySearchTree(E e) {
-		// TODO: Your implementation of this method starts here
+		
 
 	}
 	
