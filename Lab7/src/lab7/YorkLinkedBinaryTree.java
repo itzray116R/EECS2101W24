@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 //You are NOT allowed to add any "import" statement other than 
 //the ones already in the starter files. 
+import java.util.LinkedList;
 
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : Rayhaan Yaser Mohammed
@@ -128,25 +129,24 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 
 	@Override
 	public Position<E> parent(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
 		return node.getParent();
 	}
 
 	@Override
 	public Iterable<Position<E>> children(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
-		List<Position<E>> children = new ArrayList<>(); //initialize the list as a arraylist
-		if (node.getLeft() != null) {
-			children.add(node.getLeft());
-		}
-		if (node.getRight() != null) {
-			children.add(node.getRight());
-		}
+		LinkedList<Position<E>> children = new LinkedList<>(); //initialize the list as a Linked List
+		children.add(node.getLeft());
+		children.add(node.getRight());
 		return children;
 	}
 
 	@Override
 	public int numChildren(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
 		int count = 0;
 		if (node.getLeft() != null) {
@@ -160,20 +160,23 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 
 	@Override
 	public boolean isInternal(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
 		return node.getLeft() != null || node.getRight() != null;
 	}
 
 	@Override
 	public boolean isExternal(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
 		return node.getLeft() == null && node.getRight() == null;
 	}
 
 	@Override
 	public boolean isRoot(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
-		return node == root;
+		return node.equals(root);
 	}
 
 	@Override
@@ -184,7 +187,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	@Override
 	public boolean isEmpty() {
 		
-		return size == 0;
+		return root == null;
 		
 	}
 	
@@ -201,7 +204,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 			throw new IllegalStateException("Tree is not empty");
 		} else {
 			root = new Node<>(e, null, null, null);
-			size++;
+			// size++;
 			return root;
 		}
 	}
@@ -215,13 +218,10 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException if p is not a valid Position for this tree
 	 */
 	public int depth(Position<E> p) throws IllegalArgumentException {
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
 		Node<E> node = (Node<E>) p;
-		int depth = 0;
-		while (node != root) {
-			node = node.getParent();
-			depth++;
-		}
-		return depth;
+		if (node == root) return 0;
+		return 1 + depth(node.getParent());
 	}
 
 	/**
@@ -231,10 +231,14 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException
 	 */
 	public int height(Position<E> p) throws IllegalArgumentException {
-		
-		 return -1;
-
-
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		Node<E> node = (Node<E> ) p;
+		int height = 0;
+		while (node != root) {
+			height++;
+			node = node.getLeft() != null ? node.getLeft() : node.getRight();
+		}
+		return height - 1;
 	}
 
 	/**
@@ -244,30 +248,31 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 */
 	public int height() {
 		
-		return -1;
+		return height(root);
 		
 
 	}	
 
 	@Override
 	public Position<E> left(Position<E> p) throws IllegalArgumentException {
-		
-		return null;
-
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		Node<E> node = (Node<E>) p;
+		return node.getLeft();
 	}
 
 	@Override
 	public Position<E> right(Position<E> p) throws IllegalArgumentException {
-		
-		return null;
-
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		Node<E> node = (Node<E>) p;
+		return node.getRight();
 	}
 
 	@Override
 	public Position<E> sibling(Position<E> p) throws IllegalArgumentException {
-		
-		return null;
-
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		Node<E> node = (Node<E>) p;
+		Node<E> parent = node.getParent();
+		return parent.getLeft() == node ? parent.getRight() : parent.getLeft();
 	}
 
 	
@@ -283,9 +288,15 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * 									the given position has already a left child 
 	 */
 	public Position<E> insertLeft(Position<E> p, E e) throws IllegalArgumentException {
-		
-		return null;
-
+		Node<E> curr = (Node<E>) p;
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		if (curr.getLeft() != null) {
+			throw new IllegalArgumentException("The given position has already a left child");
+		} else {
+			Node<E> newNode = new Node<>(e, curr, null, null);
+			curr.setLeft(newNode);
+			return newNode;
+		}
 	}
 	
 
@@ -300,8 +311,15 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 *                                  child
 	 */
 	public Position<E> insertRight(Position<E> p, E e) throws IllegalArgumentException {
-		
-		return null;
+		Node<E> curr = (Node<E>) p;
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		if (curr.getRight() != null) {
+			throw new IllegalArgumentException("The given position has already a right child");
+		} else {
+			Node<E> newNode = new Node<>(e, curr, null, null);
+			curr.setRight(newNode);
+			return newNode;
+		}
 	}
 
 
@@ -315,9 +333,10 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * @throws IllegalArgumentException if p is not a valid Position for this tree.
 	 */
 	public E set(Position<E> p, E e) throws IllegalArgumentException {
-		
-		return null;
-
+		if (p == null || ((Node<E>) p).getParent() == p)  throw new IllegalArgumentException("P is not a valid position!");
+		E temp = p.getElement();
+		((Node<E>)p).setElement(e);
+		return temp;
 	}
 	
 	/**
@@ -329,9 +348,29 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 * 										p has two children
 	 */
 	public Position<E> remove(Position<E> p) throws IllegalArgumentException {
-		
-		return null;
-
+		Node<E> node = (Node<E>) p;
+		if (node == null || node.getParent() == node)  throw new IllegalArgumentException("P is not a valid position!");
+		if (node.getLeft() != null && node.getRight() != null) throw new IllegalArgumentException("P cannot have 2 children");
+		Node<E> parent = node.getParent();
+		Node<E> child = node.getLeft() != null ? node.getLeft() : node.getRight(); // get the child of the node
+		if (child != null) {
+			child.setParent(parent);
+		}
+		if (node == root) {
+			root = child;
+		} else {
+			if (parent.getLeft() == node) {
+				parent.setLeft(child);
+			} else {
+				parent.setRight(child);
+			}
+		}
+		node.setElement(null);
+		node.setParent(node);
+		node.setLeft(null);
+		node.setRight(null);
+		size--;		
+		return parent;
 	}
 	
 	
@@ -349,10 +388,23 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 *                                  or p is not a leaf
 	 * 
 	 */
-	public void attach(Position<E> p, YorkLinkedBinaryTree<E> t1, YorkLinkedBinaryTree<E> t2)
-			throws IllegalArgumentException {
-
-		
+	public void attach(Position<E> p, YorkLinkedBinaryTree<E> t1, YorkLinkedBinaryTree<E> t2) throws IllegalArgumentException {
+		Node<E> node = (Node<E>) p;
+		if (node == null || node.getParent() == node)  throw new IllegalArgumentException("P is not a valid position!");
+		if (isInternal(node)) throw new IllegalArgumentException("P is not a leaf");
+		size += t1.size() + t2.size();
+		if (!t1.isEmpty()) {
+			t1.root.setParent(node);
+			node.setLeft(t1.root);
+			t1.root = null;
+			t1.size = 0;
+		}
+		if (!t2.isEmpty()) {
+			t2.root.setParent(node);
+			node.setRight(t2.root);
+			t2.root = null;
+			t2.size = 0;
+		}		
 	}
 	
 	/**
@@ -361,9 +413,28 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	 */
 	@Override
 	public Iterator<E> iterator() {
-		
-		return null;
+		return new Iterator<E>() {
+			private Iterator<Position<E>> positionIterator = positions().iterator();
 
+			@Override
+			public boolean hasNext() {
+				return positionIterator.hasNext();
+			}
+
+			@Override
+			public E next() {
+				return positionIterator.next().getElement();
+			}
+
+			@Override
+			public String toString() {
+				List<E> elements = new ArrayList<>();
+				while (positionIterator.hasNext()) {
+					elements.add(positionIterator.next().getElement());
+				}
+				return elements.toString();
+			}
+		};
 	}
 
 	/**
@@ -373,9 +444,19 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 	
 	@Override
 	public Iterable<Position<E>> positions() {
-		
-		return null;
-		
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		if (root != null) preDFS(root, pos);
+		return pos;
 	}
-	 
+
+	public void preDFS(Node<E> root, LinkedList<Position<E>> pos) {
+		if (root == null) {
+			return;
+		}
+
+		System.out.println("Adding node: " + root.getElement());
+		pos.add(root);
+		preDFS(root.getLeft(), pos);
+		preDFS(root.getRight(), pos);
+	}
 }

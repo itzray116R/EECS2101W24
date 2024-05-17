@@ -1,0 +1,27 @@
+# def check_positive_float(num):
+#     while True:
+#         try:
+#             num = float(num)
+#             if num > 0:
+#                 print("The number is a positive float.")
+#                 break
+#             else:
+#                 print("The number is not positive.")
+#         except ValueError:
+#             print("The input is not a valid float.")
+#             num = input("Enter a number: ")
+
+def get_positive_float(prompt):
+    while True:
+        input_value = input(prompt)
+        # Positive floats will only have digits and at most one ‘.’
+        if (input_value.replace('.','',1).isdigit()):
+            # Convert to float and return the value
+            return (float(input_value))        
+        else:
+            # If it is not a positive number, print the error message
+            print("Value has to be a number and positive")
+            continue
+
+product_cost = get_positive_float("What is the cost of items ordered ($): ")
+print(f"Product cost: ${product_cost}")
