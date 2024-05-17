@@ -7,6 +7,8 @@ import java.util.Queue;
 //You are NOT allowed to add any "import" statement other than 
 //the ones already in the starter files. 
 
+import org.w3c.dom.Node;
+
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : Rayhaan Yaser Mohammed
 //Yorku Email : ray116@my.yorku.ca
@@ -42,8 +44,8 @@ import java.util.Queue;
  *
  */
 public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBinaryTree<E> {
-
-	
+	private Node<E> BSTRoot;
+	private int BSTsize;
 	/**
 	 * Add any other private data members or methods that are necessary to manage
 	 * the YorkLinkedBinaryTree 
@@ -53,15 +55,16 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 *  Constructs an empty binary search tree.
 	 */
 	public YorkBinarySearchTree() {
-		// TODO: Your implementation of this method starts here
+		BSTRoot = null;
+		BSTsize = 0;
 	}
 	
 	/**
 	 *  Constructs a binary search tree with given element at root 
 	 */
 	public YorkBinarySearchTree(E e) {
-		
-
+		BSTRoot = new Node<E>(e, null, null, null);
+		BSTsize = 1;
 	}
 	
 	/**
@@ -70,8 +73,9 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	
 	public YorkBinarySearchTree(E[] objects) {
-		// TODO: Your implementation of this method starts here
-		
+		for (E e : objects) {
+			insert(e);
+		}
 	}
 	
 	/**
@@ -83,7 +87,16 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	
 	public Position<E> search(E e) {
-		// TODO: Your implementation of this method starts here
+		return dfs(BSTRoot,e)
+	}
+
+	private Position<E> dfs(Node<E> root, E e){
+		if (root == null) return null;
+		if (root.getElement().equals(e)) return root;
+		Position<E> left = dfs(root.getLeft(), e);
+		if (left != null) return left;
+		Position<E> right = dfs(root.getRight(), e);
+		if (right != null) return right;	
 		return null;
 	}
 	
@@ -98,9 +111,31 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	
 	public Position<E> remove (E e){
-		// TODO: Your implementation of this method starts here
-		return null;
-		
+		Node<E> node = remHelp(BSTRoot,e);
+		if (node != null) BSTsize--;
+		return node;
+	}
+
+	private Node<E> remHelp(Node<E> node ,E e){
+		if ( node == null ) return null;
+		if (e.compareTo(node.getElement()) > 0) {
+			node.setRight(remHelp(node.getRight(), e));
+		} else if (e.compareTo(node.getElement()) < 0) {
+			node.setLeft(remHelp(node.getLeft(), e));
+		} else {
+			if (node.getLeft() == null) return node.getRight();
+			else if (node.getRight() == null) return node.getLeft();
+
+			Node<E> temp = node;
+			while (temp.getLeft() != null) {
+				temp = temp.getLeft();
+			}
+
+			node.setElement(temp.getElement());
+			node.setRight(remHelp(node.getRight(), node.getElement()));
+		}
+
+		return node;
 	}
 	
 	
@@ -113,9 +148,29 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return the Position of the newly added element 
 	 */
 	public Position<E> insert(E e) {
-		// TODO: Your implementation of this method starts here
-		 return null;
+		if (BSTRoot == null) {
+			BSTRoot = new Node<E>(e, null, null, null);
+			BSTsize++;
+			return BSTRoot;
+		}
+		BSTsize++;
+		return insertHelper(e, BSTRoot);
+	}
 
+	private Node<E> insertHelper(E e, Node<E> node){
+		if (node == null) {
+			return new Node<>(e, null, null, null);
+		}
+
+		if (e.compareTo(node.getElement()) < 0) {
+			node.setLeft(insertHelper(e, node.getLeft()));
+			node.getLeft().setParent(node);
+		} else if (e.compareTo(node.getElement()) >= 0) {
+			node.setRight(insertHelper(e, node.getRight()));
+			node.getRight().setParent(node);
+		}
+
+		return node;
 	}
 	
 	/**
@@ -124,11 +179,18 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	
 	public boolean isFullBST() {
-		// TODO: Your implementation of this method starts here
-		return false;
-
+		
+		return fullHelper(BSTRoot, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	private boolean fullHelper(Node<E> root, Integer left, Integer right){
+		if(root == null) return true;
+		if (root.getElement().compareTo((E) left) <= 0 || root.getElement().compareTo((E) right) >= 0) {
+			return false;
+		}
+		return fullHelper(root.getLeft(), left, (Integer) root.getElement()) && fullHelper(root.getRight(), (Integer) root.getElement(), right);
+	}
 	
 	
 	/**
@@ -136,9 +198,13 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return Returns the number of leaf nodes 
 	 */
 	public int getNumberOfLeaves() {
-		// TODO: Your implementation of this method starts here
-		return -1;
-		
+		return numLeaHelper(BSTRoot);
+	}
+
+	private int numLeaHelper(Node<E> node){
+		if (node == null) return 0;
+		if (node.getLeft() == null && node.getRight() == null) return 1;
+		return numLeaHelper(node.getLeft()) + numLeaHelper(node.getRight());
 	}
 	
 	
@@ -147,9 +213,12 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return Returns the number of non-leaf nodes
 	 */
 	public int getNumberofNonLeaves() {
-		// TODO: Your implementation of this method starts here
-		return -1;
-		
+		return nonNumLeaHelper(BSTRoot);
+	}
+
+	private int nonNumLeaHelper(Node<E> node){
+		if (node == null || node.getLeft() != null || node.getRight() != null) return 0;
+		return 1 + nonNumLeaHelper(node.getLeft()) + nonNumLeaHelper(node.getRight());
 	}
 	
 	/**
@@ -157,11 +226,17 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return  iterable collection of positions of the tree, reported in inorder
 	 */
 	public Iterable<Position<E>> inorder() {
-		// TODO: Your implementation of this method starts here
-		 return null;
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		inorderDFS(pos, BSTRoot);
+		return pos;
 	}
-
-	 
+	
+	private void inorderDFS(LinkedList<Position<E>> pos, Node<E> node){
+		if (node == null) return;
+		inorderDFS(pos, node.getLeft());
+		pos.add(node);
+		inorderDFS(pos, node.getRight());
+	}
 	
 	/**
 	 * Returns an iterable collection of positions of the tree, reported in preorder
@@ -169,9 +244,16 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return iterable collection of positions of the tree, reported in preorder
 	 */
 	public Iterable<Position<E>> preorder() {
-		// TODO: Your implementation of this method starts here
-		 return null;
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		preorderDFS(pos, BSTRoot);
+		return pos;
+	}
 
+	private void preorderDFS(LinkedList<Position<E>> pos, Node<E> node){
+		if (node == null) return;
+		pos.add(node);
+		preorderDFS(pos, node.getLeft());
+		preorderDFS(pos, node.getRight());
 	}
 	
 	
@@ -183,9 +265,16 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return iterable collection of positions of the tree, reported in postorder
 	 */
 	public Iterable<Position<E>> postorder() {
-		// TODO: Your implementation of this method starts here
-		 return null;
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		postorderDFS(pos, BSTRoot);
+		return pos;
+	}
 
+	private void postorderDFS (LinkedList<Position<E>> pos, Node<E> node){
+		if (node == null) return;
+		postorderDFS(pos, node.getLeft());
+		postorderDFS(pos, node.getRight());
+		pos.add(node);
 	}
 	
 
@@ -196,9 +285,21 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 * @return iterable collection of positions of the tree in breadth-first order
 	 */
 	public Iterable<Position<E>> breadthfirst() {
-		// TODO: Your implementation of this method starts here
-		 return null;		
-
+		Queue<Position<E>> q = new LinkedList<>();
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		q.add(BSTRoot);
+		while (!q.isEmpty()) {
+			int i = q.size();
+			for (int j = 0; j < i; j++) {
+				Node<E> tmp = (Node<E>) q.remove();
+				if(tmp != null) {
+					pos.add(tmp);
+					q.add(tmp.getLeft());
+					q.add(tmp.getRight());
+				}
+			}
+		}
+		return pos;
 	}
 	
 	
@@ -208,9 +309,8 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	@Override
 	public Iterable<Position<E>> positions() {
-		// TODO: Your implementation of this method starts here
-		 return null;
-	}
-
-	
+		LinkedList<Position<E>> pos = new LinkedList<>();
+		inorderDFS(pos, BSTRoot);
+		return pos;
+	}	
 }
