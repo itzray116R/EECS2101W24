@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
 ///////////////////////////////////////////////////////////////////////////
 //Full Name : Rayhaan Yaser Mohammed
 //Yorku Email : ray116@my.yorku.ca
-//Date :
+//Date : 17/05/2024
 //Authenticity Declaration :
 //I declare this submission is the result of my own work and has not been
 //shared with any other student or 3rd party content provider.This submitted
@@ -87,7 +87,7 @@ public class YorkBinarySearchTree<E extends Comparable<E>> extends YorkLinkedBin
 	 */
 	
 	public Position<E> search(E e) {
-		return dfs(BSTRoot,e)
+		return dfs(BSTRoot,e);
 	}
 
 	private Position<E> dfs(Node<E> root, E e){
