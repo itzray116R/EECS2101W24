@@ -451,8 +451,7 @@ public class YorkLinkedBinaryTree<E> implements BinaryTree<E> {
 		if (root == null) {
 			return;
 		}
-
-		System.out.println("Adding node: " + root.getElement());
+		
 		pos.add(root);
 		preDFS(root.getLeft(), pos);
 		preDFS(root.getRight(), pos);
